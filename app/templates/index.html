@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Weather App</title>
+        <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
+    <!-- End Favicon -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .weather-result {
+            display: none;
+        }
+        .weather-result.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+<!--
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Weather App</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <span class="nav-link">Hello and Welcome</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+-->   
+    <!-- End Navbar -->
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="typewrite" data-period="2000"
+                data-type='[ "HI", "GUTEN TAG", " OLÂ ", "SALAAM "," MARHABA", "BONJOUR " , "こんにちは" ]'></h1><br>
+                <h3 class="text-center">What's the Weather Today !</h3>
+                <div id="weather-form" class="{{ 'hidden' if weather else '' }}">
+                    <form method="post" class="form-inline justify-content-center">
+                        <input type="text" name="city" class="form-control mr-2" placeholder="Enter city" list="city-suggestions" required>
+                        <button type="submit" class="btn btn-primary">Get Weather</button>
+                    </form>
+                </div>
+                <div id="weather-result" class="weather-result {{ 'show' if weather else '' }} text-center">
+                    {% if weather %}
+                        {% if weather.cod == 200 %}
+                            <h2>{{ weather.name }}</h2>
+                            <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png" alt="{{ weather.weather[0].description }}">
+                            <p>{{ weather.weather[0].description }}</p>
+                            <h3>{{ weather.main.temp }}°C</h3>
+                        {% else %}
+                            <div class="alert alert-danger mt-4" role="alert">
+                                {{ weather.message }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                                        <div id="back-button" class="{{ 'hidden' if not weather else '' }} text-center mt-4">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <span class="text-muted">&copy; 2024 Weather App| By Ghassen Ben Taher.</span>
+            <!-- Social Links -->
+            <div class="social-links mt-2">
+                <a href="#" target="_blank" class="text-muted mr-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" class="text-muted mr-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank" class="text-muted"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript">
+        //made by vipul mirajkar thevipulm.appspot.com
+        var TxtType = function (el, toRotate, period) {
+            this.toRotate = toRotate;
+            this.el = el;
+            this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000;
+            this.txt = '';
+            this.tick();
+            this.isDeleting = false;
+        };
+
+        TxtType.prototype.tick = function () {
+            var i = this.loopNum % this.toRotate.length;
+            var fullTxt = this.toRotate[i];
+
+            if (this.isDeleting) {
+                this.txt = fullTxt.substring(0, this.txt.length - 1);
+            } else {
+                this.txt = fullTxt.substring(0, this.txt.length + 1);
+            }
+
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+
+            var that = this;
+            var delta = 200 - Math.random() * 100;
+
+            if (this.isDeleting) { delta /= 2; }
+
+            if (!this.isDeleting && this.txt === fullTxt) {
+                delta = this.period;
+                this.isDeleting = true;
+            } else if (this.isDeleting && this.txt === '') {
+                this.isDeleting = false;
+                this.loopNum++;
+                delta = 500;
+            }
+
+            setTimeout(function () {
+                that.tick();
+            }, delta);
+        };
+
+        window.onload = function () {
+            var elements = document.getElementsByClassName('typewrite');
+            for (var i = 0; i < elements.length; i++) {
+                var toRotate = elements[i].getAttribute('data-type');
+                var period = elements[i].getAttribute('data-period');
+                if (toRotate) {
+                    new TxtType(elements[i], JSON.parse(toRotate), period);
+                }
+            }
+            // INJECT CSS
+            var css = document.createElement("style");
+            css.type = "text/css";
+            css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+            document.body.appendChild(css);
+        };
+    </script>
+
+</body>
+</html>

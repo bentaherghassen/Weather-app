@@ -1,0 +1,56 @@
+body {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.weather-info {
+    animation: fadeIn 2s;
+}
+
+.alert {
+    animation: fadeIn 2s;
+}
+
+.weather-info img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+}
+
+.weather-result {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.weather-result.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#weather-form.hidden {
+    display: none;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
